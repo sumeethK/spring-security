@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -18,6 +19,7 @@ import java.util.Set;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ImportResource({"application-context.xml"})
 public class CustomUserDetailServiceTest {
 
     @Autowired
@@ -35,16 +37,16 @@ public class CustomUserDetailServiceTest {
 
     @Test
     public void testDeleteUser() {
-        userService.deleteUserById(1);
+        userService.deleteUserById(5);
     }
 
 
     private CustomisedUser createAdminUser() {
         Set<CustomizedUserRole> roles = new HashSet<>();
-        roles.add(new CustomizedUserRole(SystemRoles.GUEST));
+        roles.add(new CustomizedUserRole(SystemRoles.ADMIN));
         return new CustomisedUser.UserBuilder()
-                .withUsername("toto")
-                .withPassword(passwordEncoder.encode("toto"))
+                .withUsername("admin")
+                .withPassword(passwordEncoder.encode("admin"))
                 .withAccountNonExpired(true)
                 .withAccountNonLocked(true)
                 .withCredentialsNonExpired(true)
