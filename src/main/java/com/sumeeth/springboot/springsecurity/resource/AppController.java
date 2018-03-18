@@ -3,14 +3,11 @@ package com.sumeeth.springboot.springsecurity.resource;
 import com.sumeeth.springboot.springsecurity.entity.CustomisedUser;
 import com.sumeeth.springboot.springsecurity.service.CustomizedUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/app")
 public class AppController {
@@ -27,6 +24,13 @@ public class AppController {
     @RequestMapping("/secured")
     public String securedHelloApp(){
         return "Your App is secured!";
+    }
+
+    @RequestMapping("/user/profile/{userId}")
+    public @ResponseBody
+    Object getUser(@PathVariable(name = "userId") Integer userId)
+    {
+        return userService.findCustomUserById(userId).get();
     }
 
     @RequestMapping("/user/{username}")

@@ -1,7 +1,9 @@
 package com.sumeeth.springboot.springsecurity.service;
 
+import com.sumeeth.springboot.springsecurity.entity.AuthDetail;
 import com.sumeeth.springboot.springsecurity.entity.CustomUserDetails;
 import com.sumeeth.springboot.springsecurity.entity.CustomisedUser;
+import com.sumeeth.springboot.springsecurity.entity.UserProfile;
 import com.sumeeth.springboot.springsecurity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,19 +53,26 @@ public class CustomUserDetailServiceImpl implements UserDetailsService,Customize
     }
 
     @Override
+    public Optional<Object> findCustomUserById(Integer userId) {
+        Object profile = usersRepository.findCustomUserById(userId);
+        return Optional.ofNullable(profile);
+//        return new UserProfile()
+    }
+
+    @Override
     public void deleteUserById(Integer userId) {
          usersRepository.deleteById(userId);
     }
 
     @Override
-    public CustomUserDetails authenticate(String username, String password) throws AccountException {
+    public CustomUserDetails authenticate(AuthDetail authDetail) throws AccountException {
         Optional<CustomisedUser> optionalUsers =
-                usersRepository.findByUsername(username);
-boolean isPasswordMatch=false;
+                usersRepository.findByUsername(authDetail.getUsername());
+        boolean isPasswordMatch=false;
         optionalUsers
-                .orElseThrow(() -> new UsernameNotFoundException("Username: "+username +" not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Username: "+authDetail.getUsername() +" not found"));
         try {
-            isPasswordMatch= passwordEncoder.matches(password,optionalUsers.get().getPassword());
+            isPasswordMatch= passwordEncoder.matches(authDetail.getPassword(),optionalUsers.get().getPassword());
         }catch (Exception e){
             throw new RuntimeException("Incorrect Username/password combination.");
         }

@@ -13,28 +13,28 @@ public class CustomisedUser{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
-    private Integer userId;
+    protected Integer userId;
 
     @Column
-    private String username;
+    protected String username;
 
     @Column
-    private String password;
+    protected String password;
 
     @Column
-    private boolean accountNonExpired;
+    protected boolean accountNonExpired;
     @Column
-    private boolean accountNonLocked;
+    protected boolean accountNonLocked;
     @Column
-    private boolean credentialsNonExpired;
+    protected boolean credentialsNonExpired;
     @Column
-    private boolean enabled;
+    protected boolean enabled;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     @JsonManagedReference
-    private Set<CustomizedUserRole> roles;
+    protected Set<CustomizedUserRole> roles;
 
     public CustomisedUser(){};
 

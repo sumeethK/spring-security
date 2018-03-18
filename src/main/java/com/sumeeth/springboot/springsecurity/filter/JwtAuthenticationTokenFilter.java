@@ -24,7 +24,7 @@ public class JwtAuthenticationTokenFilter extends AbstractAuthenticationProcessi
     @Override
     public Authentication attemptAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws AuthenticationException, IOException, ServletException {
 
-        String header = httpServletRequest.getHeader("Authorisation");
+        String header = httpServletRequest.getHeader("Authorization");
 
 
         if (header == null || !header.startsWith("Token ")) {
@@ -43,5 +43,6 @@ public class JwtAuthenticationTokenFilter extends AbstractAuthenticationProcessi
         super.successfulAuthentication(request, response, chain, authResult);
         chain.doFilter(request, response);
     }
+
 
 }

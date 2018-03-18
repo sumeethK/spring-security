@@ -1,5 +1,6 @@
 package com.sumeeth.springboot.springsecurity.config;
 
+import com.sumeeth.springboot.springsecurity.filter.CorsFilter;
 import com.sumeeth.springboot.springsecurity.filter.ExceptionHandlerFilter;
 import com.sumeeth.springboot.springsecurity.filter.JwtAuthenticationTokenFilter;
 import com.sumeeth.springboot.springsecurity.security.JwtAuthenticationEntryPoint;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -62,15 +64,16 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/auth/authenticate").permitAll()
-                .and().authorizeRequests().antMatchers("/**").authenticated()
+                .authorizeRequests()
+                .antMatchers("/auth/authenticate").permitAll()
+                .antMatchers("/**").authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(entryPoint)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        http.addFilterBefore(corsFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         // Custom Exception Filter for filter
         http.addFilterBefore(exceptionHandlerFilterBean(), JwtAuthenticationTokenFilter.class);
@@ -81,6 +84,11 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public ExceptionHandlerFilter exceptionHandlerFilterBean() {
         ExceptionHandlerFilter filter = new ExceptionHandlerFilter();
+        return filter;
+    }
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsFilter filter = new CorsFilter();
         return filter;
     }
 
